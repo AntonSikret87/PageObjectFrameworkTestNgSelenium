@@ -5,7 +5,9 @@ pipeline {
                 steps {
                     sh '''
                         echo "PATH = ${PATH}"
-                        echo "M2_HOME = ${M2_HOME}"
+                        echo "MAVEN_HOME = ${MAVEN_HOME}"
+                        echo "JAVA_HOME = ${JAVA_HOME}"
+                        echo "ALLURE_HOME = ${ALLURE_HOME}"
                     '''
                 }
             }
@@ -18,6 +20,19 @@ pipeline {
                   steps{
                       sh 'mvn test -DsuiteXmlFile="testng.xml"'
                   }
+            }
+            stage('Allure Reports Stage') {
+                steps {
+                script {
+                        allure([
+                                includeProperties: false,
+                                jdk: '',
+                                properties: [],
+                                reportBuildPolicy: 'ALWAYS',
+                                results: [[path: 'target/allure-results']]
+                        ])
+                }
+                }
             }
         }
 }
