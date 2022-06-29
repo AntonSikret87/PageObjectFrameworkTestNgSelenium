@@ -18,22 +18,19 @@ pipeline {
             }
             stage('Test Stage') {
                   steps{
-                      sh 'mvn test -DsuiteXmlFile="testng.xml"'
+                      sh 'mvn test -DsuiteXmlFile="testng.xml" -Dmaven.test.failure.ignore=true'
                   }
-
-            post {
-                  always {
-                    script {
-                      allure([
-                        includeProperties: false,
-                        jdk: '',
-                        properties: [],
-                        reportBuildPolicy: 'ALWAYS',
-                        results: [[path: 'target/allure-results']]
-                      ])
-                    }
-                  }
-                }
             }
-       }
-    }
+            stage('Reports') {
+                 steps{
+                  allure([
+                      includeProperties: false,
+                      jdk: '',
+                      properties: [],
+                      reportBuildPolicy: 'ALWAYS',
+                      results: [[path: 'target/surefire-reports']]
+                  ])
+                  }
+              }
+          }
+        }
