@@ -20,7 +20,7 @@ pipeline {
                   steps{
                       sh 'mvn test -DsuiteXmlFile="testng.xml"'
                   }
-            }
+
             post {
                   always {
                     script {
@@ -34,6 +34,6 @@ pipeline {
                     }
                   }
                 }
-
+            }
        }
     }
