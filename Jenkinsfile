@@ -21,18 +21,21 @@ pipeline {
                       sh 'mvn test -DsuiteXmlFile="testng.xml"'
                   }
             }
-            stage('Allure Reports Stage') {
-                steps {
-                script {
-                        allure([
-                                includeProperties: false,
-                                jdk: '',
-                                properties: [],
-                                reportBuildPolicy: 'ALWAYS',
-                                results: [[path: 'target/allure-results']]
-                        ])
+            stage('Report') {
+                                steps {
+                                    publishHTML([reportName  : 'Allure Report', reportDir: 'target/allure-result', reportFiles: 'index.html',
+                                                 reportTitles: '', allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false])
+                                }
+                            }
                 }
+                post {
+                    always {
+                        deleteDir()
+                    }
+                    failure {
+                        slackSend message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} failed (<${env.BUILD_URL}|Open>)",
+                                color: 'danger', teamDomain: 'qameta', channel: 'allure', tokenCredentialId: 'allure-channel'
+                    }
                 }
-            }
-        }
+   }
 }
