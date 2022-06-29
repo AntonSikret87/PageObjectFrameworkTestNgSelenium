@@ -4,11 +4,11 @@ pipeline {
         stage('Initialize') {
             steps {
                 sh '''
-                                        echo "PATH = ${PATH}"
-                                        echo "MAVEN_HOME = ${MAVEN_HOME}"
-                                        echo "JAVA_HOME = ${JAVA_HOME}"
-                                        echo "ALLURE_HOME = ${ALLURE_HOME}"
-                                    '''
+                  echo "PATH = ${PATH}"
+                  echo "MAVEN_HOME = ${MAVEN_HOME}"
+                  echo "JAVA_HOME = ${JAVA_HOME}"
+                  echo "ALLURE_HOME = ${ALLURE_HOME}"
+                  '''
             }
         }
         stage('Compile Stage') {
@@ -23,6 +23,7 @@ pipeline {
         }
             stage('Reports') {
                  steps{
+                 script {
                   allure([
                       includeProperties: false,
                       jdk: '',
@@ -33,5 +34,6 @@ pipeline {
                   }
               }
           }
-        }
+       }
+   }
 
